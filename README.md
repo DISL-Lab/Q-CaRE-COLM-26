@@ -117,7 +117,7 @@ a score can always be traced back to the sub-queries and claims behind it:
   // Stage 1 - decomposition
   "decomposed_query": {
     "Core subquery1": "Who is the actor who plays the character Harley in the TV show Stuck in the Middle?",
-    "Core subquery2": "What is the name of the character played by Jenna Ortega in Stuck in the Middle?"
+    "Core subquery2": "What is the name of the character played by Harley in the TV show Stuck in the Middle?"
   },
   "atomic_facts": {
     "Atomic fact1": "Jenna Ortega plays the character Harley on the television show Stuck in the Middle."
