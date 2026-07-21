@@ -33,11 +33,19 @@ library versions and hardware, a run is deterministic.
 Evaluate one target model over all eight datasets (800 queries) and aggregate:
 
 ```bash
-bash scripts/run_benchmark.sh GPT-5 0 1      # close on GPU 0, open on GPU 1
+bash scripts/run_benchmark.sh GPT-5
 ```
 
-Roughly 16 s per query, so about 1.8 h per model on two GPUs. Runs checkpoint
-every five queries and resume automatically.
+The script evaluates both splits and writes the aggregated table. Runs
+checkpoint every five queries and resume automatically, so it is safe to
+interrupt. The two splits are independent, so they can equally well be launched
+side by side on separate GPUs:
+
+```bash
+CUDA_VISIBLE_DEVICES=0 python evaluate.py --input_path data/testbed/test-close_ended_queries.json --target_model GPT-5 &
+CUDA_VISIBLE_DEVICES=1 python evaluate.py --input_path data/testbed/test-open_ended_queries.json  --target_model GPT-5 &
+wait
+```
 
 For the complete table, repeat for each target model:
 

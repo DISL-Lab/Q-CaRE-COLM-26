@@ -144,8 +144,7 @@ a score can always be traced back to the sub-queries and claims behind it:
 Full benchmark for one model, then a per-dataset table:
 
 ```bash
-bash scripts/run_benchmark.sh GPT-5 0 1        # close on GPU 0, open on GPU 1
-python analysis/generator_benchmark.py --results_dir results
+bash scripts/run_benchmark.sh GPT-5      # both splits, then the table
 ```
 
 ```
@@ -181,7 +180,7 @@ Loads the backbone once so each query scores in seconds — useful for inspectin
 decompositions and judgements while adapting prompts.
 
 ```bash
-CUDA_VISIBLE_DEVICES=0 python -i scripts/interactive.py
+python -i scripts/interactive.py
 ```
 ```python
 >>> r = ev("nq_test_812")

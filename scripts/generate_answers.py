@@ -7,7 +7,7 @@ released benchmark already contains answers for eight models, so this script is
 only needed to **add your own model** and then evaluate it with Q-CARE.
 
     # 1) generate answers and write them into a copy of the testbed
-    CUDA_VISIBLE_DEVICES=0 python scripts/generate_answers.py \
+    python scripts/generate_answers.py \
         --input_path  data/testbed/test-close_ended_queries.json \
         --output_path data/testbed/test-close_ended_queries+mymodel.json \
         --model       meta-llama/Llama-3.1-8B-Instruct \

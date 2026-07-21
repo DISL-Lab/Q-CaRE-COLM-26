@@ -4,7 +4,7 @@ Loads the backbone once so you can score queries in seconds instead of paying
 the model-load cost per run. Useful for inspecting decompositions, atomic facts
 and relevance judgements while adapting the prompts.
 
-    CUDA_VISIBLE_DEVICES=0 python -i scripts/interactive.py
+    python -i scripts/interactive.py
 
 Then:
 
