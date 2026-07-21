@@ -2,6 +2,8 @@
 
 # Q-CARE
 
+**Q**uery **C**overage and cl**A**im ve**R**ifiability for RAG **E**valuation
+
 **Towards Query-Agnostic RAG Evaluation via Query Coverage and Claim Verifiability**
 
 Jeonghwan Choi · Taewon Yun · Minjeong Ban · Gyeonghun Sun · Jae-Gil Lee · Hwanjun Song
