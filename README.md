@@ -4,6 +4,8 @@
 
 <h3><b>Q-CARE</b><br>: <ins>Q</ins>uery <ins>C</ins>overage and cl<ins>A</ins>im ve<ins>R</ins>ifiability for RAG <ins>E</ins>valuation</h3>
 
+<b>Score a RAG system's retriever <i>and</i> generator in one pass — no gold answers, no API keys.</b>
+
 Jeonghwan Choi &nbsp;·&nbsp; Taewon Yun &nbsp;·&nbsp; Minjeong Ban &nbsp;·&nbsp; Gyeonghun Sun &nbsp;·&nbsp; Jae-Gil Lee &nbsp;·&nbsp; Hwanjun Song
 
 Korea Advanced Institute of Science and Technology (KAIST)
@@ -65,14 +67,27 @@ explanation, and a gold answer is never consulted.
 
 ## 📊 Metrics
 
+**Retriever.** Relevance is *graded*, not binary — a chunk is as relevant as the
+share of the query it resolves:
+
+<div align="center">
+<b>r<sub>j</sub></b> &nbsp;=&nbsp; ( sub-queries covered by chunk <i>j</i> ) &nbsp;/&nbsp; ( total sub-queries )
+</div>
+
 <table>
-<tr><th align="left" colspan="2">Retriever — coverage-aware</th></tr>
-<tr><td><b>C-Prec@k</b></td><td>How much sub-query coverage do the top-k chunks provide?</td></tr>
-<tr><td><b>C-nDCG@k</b></td><td>Are the chunks covering more sub-queries ranked higher?</td></tr>
-<tr><th align="left" colspan="2">Generator — claim-level</th></tr>
-<tr><td><b>Completeness</b></td><td>Does the answer address every sub-query?</td></tr>
-<tr><td><b>Conciseness</b></td><td>Is every claim in the answer actually needed?</td></tr>
-<tr><td><b>Verifiableness</b></td><td>Is every claim supported by a retrieved chunk?</td></tr>
+<tr><td><b>C-Prec@k</b></td><td>mean of <i>r<sub>j</sub></i> over the top-k chunks</td></tr>
+<tr><td><b>C-nDCG@k</b></td><td>nDCG over the same graded relevance, linear gain</td></tr>
+</table>
+
+A chunk that answers two of three sub-queries scores 2/3, outranking one that
+answers a single sub-query — a distinction binary relevance cannot express.
+
+**Generator.** Each metric is a ratio over the answer's own claims:
+
+<table>
+<tr><td><b>Completeness</b></td><td>sub-queries the answer covers &nbsp;/&nbsp; sub-queries</td></tr>
+<tr><td><b>Conciseness</b></td><td>claims that serve a covered sub-query &nbsp;/&nbsp; claims</td></tr>
+<tr><td><b>Verifiableness</b></td><td>claims supported by a retrieved chunk &nbsp;/&nbsp; claims</td></tr>
 </table>
 
 ## ⚙️ Install
@@ -192,8 +207,36 @@ python -i scripts/interactive.py
 ```
 </details>
 
-<details>
-<summary><b>Use it on your own data</b></summary>
+## 🔧 Evaluate your own system
+
+Nothing here is specific to the shipped benchmark — Q-CARE scores any
+(query, answer, chunks) triple.
+
+**Your generator**, against the same queries and chunks the eight shipped
+systems saw:
+
+```bash
+python scripts/generate_answers.py \
+  --input_path  data/testbed/test-close_ended_queries.json \
+  --output_path data/testbed/test-close_ended_queries+mymodel.json \
+  --model meta-llama/Llama-3.1-8B-Instruct --model_key MyModel
+
+python evaluate.py \
+  --input_path data/testbed/test-close_ended_queries+mymodel.json \
+  --target_model MyModel
+```
+
+**Your retriever** — add its ranked chunks under a new key. Only the chunk texts
+are needed, so no index or corpus has to leave your machine:
+
+```python
+record["retrieved_chunk"]["MyRetriever"] = my_search(record["query"], k=10)
+```
+```bash
+python evaluate_retriever.py --retrievers MyRetriever,BM25 ...
+```
+
+**Your own queries**, straight from Python:
 
 ```python
 from qcare import Backbone, QCAREPipeline
@@ -207,7 +250,6 @@ result = pipeline.evaluate(
 )
 print(result["metrics"])
 ```
-</details>
 
 ## 🎛️ Customising
 
@@ -217,33 +259,6 @@ print(result["metrics"])
 | **Backbone** | `--eval_model <model id>` — any **instruction-tuned** chat model with a tokenizer chat template. The paper evaluates Qwen3-30B, Qwen3-80B, Llama3.1-8B and Llama3.3-70B as backbones |
 | **Retriever** | `--retrieval_method ANCE` — BM25 and ANCE ship with the benchmark |
 | **Parsing** | `--parsing paper` reproduces the published behaviour; `strict` never double counts a claim |
-
-<details>
-<summary><b>Benchmark your own model or retriever</b></summary>
-
-**Your model** — generate its answers over the same queries and chunks, then score:
-
-```bash
-python scripts/generate_answers.py \
-  --input_path  data/testbed/test-close_ended_queries.json \
-  --output_path data/testbed/test-close_ended_queries+mymodel.json \
-  --model meta-llama/Llama-3.1-8B-Instruct --model_key MyModel
-
-python evaluate.py \
-  --input_path data/testbed/test-close_ended_queries+mymodel.json \
-  --target_model MyModel
-```
-
-**Your retriever** — add its ranked chunks under a new key. Only chunk texts are
-needed; no index or corpus has to be shared.
-
-```python
-record["retrieved_chunk"]["MyRetriever"] = my_search(record["query"], k=10)
-```
-```bash
-python evaluate_retriever.py --retrievers MyRetriever,BM25 ...
-```
-</details>
 
 ## 📦 Benchmark data
 
