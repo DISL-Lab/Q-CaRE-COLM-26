@@ -125,43 +125,45 @@ a score can always be traced back to the sub-queries and claims behind it:
 
 ```jsonc
 {
-  "qid":          "hotpotqa_test_2289",
-  "query":        "what type of profession does alexandra david-néel and jack kerouac have in common?",
-  "model_answer": "writer",                    // the RAG answer being evaluated
+  "qid":          "PubMedQA_test_860",
+  "query":        "is fetal anatomic assessment on follow-up antepartum sonograms clinically useful?",
+  "model_answer": "Yes. In women with a prior normal anatomy scan, repeating a full anatomic survey on follow-up antepartum sonograms detected unanticipated anomalies in 7.1% overall and 12.3% when the follow-up was for fetal growth. In the growth group, 40% of detected anomalies led to neonatal interventions, indicating clinical usefulness.",
 
-  // Stage 1 - decomposition: one sub-query per entity the query asks about
+  // Stage 1 - the query splits in two; the answer breaks into four claims
   "decomposed_query": {
-    "Core subquery1": "What profession does alexandra david-néel have?",
-    "Core subquery2": "What profession does jack kerouac have?"
+    "Core subquery1": "What is the clinical utility of fetal anatomic assessment during follow-up antepartum sonograms?",
+    "Core subquery2": "What specific outcomes or benefits are associated with performing fetal anatomic assessment on follow-up antepartum sonograms?"
   },
   "atomic_facts": {
-    "Atomic fact1": "Alexandra David-Néel was a writer",
-    "Atomic fact2": "Jack Kerouac was a writer"
+    "Atomic fact1": "Repeating a full anatomic survey on follow-up antepartum sonograms is clinically useful in women with a prior normal anatomy scan",
+    "Atomic fact2": "Repeating a full anatomic survey on follow-up antepartum sonograms detected unanticipated anomalies in 7.1% of cases overall",
+    "Atomic fact3": "Repeating a full anatomic survey on follow-up antepartum sonograms detected unanticipated anomalies in 12.3% of cases when the follow-up was for fetal growth",
+    "Atomic fact4": "In the growth group, 40% of detected anomalies led to neonatal interventions"
   },
 
-  // Stage 2 - alignment judgements (query_chunk_coverage shown; three more omitted)
+  // Stage 2 - alignment judgements (two of the four shown)
   "relevance_check": {
     "query_chunk_coverage": {
-      "Chunk 1":  ["Core subquery1"],                     // covers 1 of 2  -> r = 0.5
-      "Chunk 2":  ["Core subquery1", "Core subquery2"],   // covers 2 of 2  -> r = 1.0
-      "Chunk 4":  ["Core subquery1"],
-      "Chunk 8":  ["Core subquery1"],
-      "Chunk 9":  ["Core subquery1"],
-      "Chunk 10": ["Core subquery2"]
+      "Chunk 1": ["Core subquery1"],                    // covers 1 of 2  ->  r = 0.5
+      "Chunk 4": ["Core subquery1", "Core subquery2"]   // covers 2 of 2  ->  r = 1.0
+    },
+    "chunk_fact_relevance": {
+      "Chunk 4": { "selected_facts": ["Atomic fact2", "Atomic fact3", "Atomic fact4"] }
     },
     "...": "..."
   },
 
   // Stage 3 - metrics
   "metrics": {
-    // retriever: Chunk 2 outranks the rest because it resolves the whole query,
+    // retriever: Chunk 4 resolves the whole query and Chunk 1 only half of it,
     // a distinction binary relevance cannot make
-    "precision_at_10": 0.350,   // C-Prec@10
-    "ndcg_at_10":      0.836,   // C-nDCG@10
-    // generator: both sub-queries answered, no wasted claim, every claim supported
-    "completeness":    1.000,
-    "conciseness":     1.000,
-    "verifiableness":  1.000
+    "precision_at_10": 0.150,   // C-Prec@10
+    "ndcg_at_10":      0.707,   // C-nDCG@10
+    // generator
+    "completeness":    1.000,   // both sub-queries answered
+    "conciseness":     1.000,   // no claim is surplus to the query
+    "verifiableness":  0.750    // 3 of 4 claims are supported by a chunk; fact 1 is
+                                // the answer's own verdict, which no chunk states
   }
 }
 ```
