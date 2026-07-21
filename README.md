@@ -24,16 +24,10 @@ apply from close-ended fact-seeking to open-ended explanatory queries, and no
 gold answer is needed at evaluation time.
 
 <div align="center">
-
-[How it works](#how-it-works) · [Install](#install) · [Quick start](#quick-start) · [Customising](#customising) · [Benchmark data](#benchmark-data) · [Reproducibility](#reproducibility) · [Citation](#citation)
-
-</div>
-
-<div align="center">
 <img src="assets/overview.png" width="100%" alt="Q-CARE framework overview">
 </div>
 
-## How it works
+## 🔍 How it works
 
 **Stage 1 · Decomposition.** A *decomposer* splits the query into minimal,
 non-overlapping **sub-queries** and the answer into self-contained **atomic
@@ -57,7 +51,7 @@ Because everything is grounded in the query's own sub-questions, the same
 procedure works whether the query has one factual answer or needs a long
 explanation, and a gold answer is never consulted.
 
-## Metrics
+## 📊 Metrics
 
 <table>
 <tr><th align="left" colspan="2">Retriever — coverage-aware</th></tr>
@@ -69,7 +63,7 @@ explanation, and a gold answer is never consulted.
 <tr><td><b>Verifiableness</b></td><td>Is every claim supported by a retrieved chunk?</td></tr>
 </table>
 
-## Install
+## ⚙️ Install
 
 ```bash
 git clone https://github.com/DISL-Lab/Q-CaRE-COLM-26.git
@@ -86,7 +80,7 @@ card, pass a smaller instruction-tuned backbone — for example
 `--eval_model meta-llama/Llama-3.1-8B-Instruct` — at some cost in agreement with
 human judgement.
 
-## Quick start
+## 🚀 Quick start
 
 One run evaluates **both halves of the RAG pipeline**: the same query
 decomposition yields the retriever metrics for the chunks and the generator
@@ -204,7 +198,7 @@ print(result["metrics"])
 ```
 </details>
 
-## Customising
+## 🎛️ Customising
 
 | What | How |
 |---|---|
@@ -240,7 +234,7 @@ python evaluate_retriever.py --retrievers MyRetriever,BM25 ...
 ```
 </details>
 
-## Benchmark data
+## 📦 Benchmark data
 
 `data/testbed/` holds **800 queries** — 400 close-ended (NQ, NewsQA, HotpotQA,
 FinQA) and 400 open-ended (PubMedQA, LoTTE-Science, LoTTE-Technology, ELI5).
@@ -252,7 +246,7 @@ inline, so evaluation needs no corpus download.**
 tasks and the Q-CARE scores derived from them — see
 [`data/human_labels/README.md`](data/human_labels/README.md).
 
-## Repository layout
+## 🗂️ Repository layout
 
 ```
 evaluate.py                 score a target model (retriever + generator metrics)
@@ -270,14 +264,7 @@ scripts/                    benchmark runner, answer generation, interactive ses
 docs/REPRODUCE.md           reproducing the paper's tables
 ```
 
-## Reproducibility
-
-Every step uses greedy decoding, so a run is deterministic for a fixed backbone,
-the pinned versions in `requirements.txt`, and fixed hardware.
-[`docs/REPRODUCE.md`](docs/REPRODUCE.md) walks through reproducing each table in
-the paper.
-
-## Citation
+## 📄 Citation
 
 ```bibtex
 @inproceedings{choi2026qcare,
@@ -289,6 +276,6 @@ the paper.
 }
 ```
 
-## License
+## ⚖️ License
 
 Released under the MIT License — see [LICENSE](LICENSE).
