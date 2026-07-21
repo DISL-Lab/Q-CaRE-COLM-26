@@ -125,32 +125,41 @@ a score can always be traced back to the sub-queries and claims behind it:
 
 ```jsonc
 {
-  "qid":          "nq_test_812",
-  "query":        "who plays harley on stuck in the middle?",   // the original query
-  "model_answer": "Jenna Ortega",                               // what is being evaluated
+  "qid":          "hotpotqa_test_2289",
+  "query":        "what type of profession does alexandra david-néel and jack kerouac have in common?",
+  "model_answer": "writer",                    // the RAG answer being evaluated
 
-  // Stage 1 - decomposition
+  // Stage 1 - decomposition: one sub-query per entity the query asks about
   "decomposed_query": {
-    "Core subquery1": "Who is the actor who plays the character Harley in the TV show Stuck in the Middle?",
-    "Core subquery2": "What is the name of the character played by Harley in the TV show Stuck in the Middle?"
+    "Core subquery1": "What profession does alexandra david-néel have?",
+    "Core subquery2": "What profession does jack kerouac have?"
   },
   "atomic_facts": {
-    "Atomic fact1": "Jenna Ortega plays the character Harley on the television show Stuck in the Middle."
+    "Atomic fact1": "Alexandra David-Néel was a writer",
+    "Atomic fact2": "Jack Kerouac was a writer"
   },
 
-  // Stage 2 - alignment judgements (abridged)
+  // Stage 2 - alignment judgements (query_chunk_coverage shown; three more omitted)
   "relevance_check": {
-    "query_chunk_coverage": { "Chunk 2": ["Core subquery1"] },
+    "query_chunk_coverage": {
+      "Chunk 1":  ["Core subquery1"],                     // covers 1 of 2  -> r = 0.5
+      "Chunk 2":  ["Core subquery1", "Core subquery2"],   // covers 2 of 2  -> r = 1.0
+      "Chunk 4":  ["Core subquery1"],
+      "Chunk 8":  ["Core subquery1"],
+      "Chunk 9":  ["Core subquery1"],
+      "Chunk 10": ["Core subquery2"]
+    },
     "...": "..."
   },
 
   // Stage 3 - metrics
   "metrics": {
-    // retriever
-    "precision_at_10": 0.050,   // C-Prec@10
-    "ndcg_at_10":      0.631,   // C-nDCG@10
-    // generator
-    "completeness":    0.500,
+    // retriever: Chunk 2 outranks the rest because it resolves the whole query,
+    // a distinction binary relevance cannot make
+    "precision_at_10": 0.350,   // C-Prec@10
+    "ndcg_at_10":      0.836,   // C-nDCG@10
+    // generator: both sub-queries answered, no wasted claim, every claim supported
+    "completeness":    1.000,
     "conciseness":     1.000,
     "verifiableness":  1.000
   }
