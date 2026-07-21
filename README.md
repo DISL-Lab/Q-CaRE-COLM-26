@@ -1,8 +1,6 @@
 <div align="center">
 
-# Q-CARE
-
-**Q**uery **C**overage and cl**A**im ve**R**ifiability for RAG **E**valuation
+# Q-CARE: <u>Q</u>uery <u>C</u>overage and cl<u>A</u>im ve<u>R</u>ifiability for RAG <u>E</u>valuation
 
 **Towards Query-Agnostic RAG Evaluation via Query Coverage and Claim Verifiability**
 
