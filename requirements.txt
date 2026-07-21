@@ -1,0 +1,15 @@
+# Q-CaRE core pipeline dependencies.
+# These are the exact versions used to produce the results in the paper.
+# Greedy decoding + these pinned versions make the pipeline deterministic
+# for a fixed backbone and GPU.
+
+torch==2.11.0
+transformers==5.7.0
+accelerate==1.13.0
+numpy==2.2.6
+tqdm==4.67.3
+safetensors==0.7.0
+
+# Optional: only needed if you evaluate with a hosted API backbone instead of
+# the local Qwen model (see scripts/). Not required for the default pipeline.
+# openai==2.29.0

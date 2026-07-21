@@ -1,0 +1,202 @@
+# Q-CARE prompt templates.
+#
+# Every LLM call the pipeline makes is defined here, so you can adapt Q-CARE to a
+# new backbone or task without touching the Python code. Each entry has a
+# `system` message and a `user` template; the placeholders in braces are filled
+# in at run time.
+#
+# Placeholders per task:
+#   query_decomposition    {query}
+#   atomic_fact_extraction {query} {answer}
+#   query_fact_relevance   {subquery} {fact}
+#   query_fact_coverage    {subquery} {facts}
+#   chunk_fact_relevance   {chunk} {atomic_facts}
+#   query_chunk_coverage   {subquery} {chunk}
+#   answer_generation      {query} {context}   (optional; only for building a benchmark)
+#
+# `chunk_fact_relevance` is the prompt used for the published results. The
+# `chunk_fact_relevance_robust` variant additionally forces the model to answer
+# with fact keys only; select it with `--parsing robust`.
+
+query_decomposition:
+  system: You are a query analyzer. Decompose complex queries into minimal, essential subqueries.
+  user: |2
+
+    Decompose the query into independent Core subqueries.
+
+    Step 1: Identify Query Type
+    - Multi-step reasoning: Requires sequential logical steps
+    - Multi-aspect: Requires multiple independent dimensions
+    - Single-focus: One coherent question
+
+    Step 2: Apply Strategy
+    A) Multi-step reasoning → Break into sequential logical steps
+    B) Multi-aspect → Break into minimal, non-redundant set of necessary perspectives
+    C) Single-focus → Return the original query EXACTLY as is, without rewording
+
+    Rules:
+    1. Each subquery must be self-contained (no "this", "that", "the above")
+    2. Do not include background knowledge or assumptions
+    3. Subqueries must be distinct (no overlap)
+    4. The information asked by each subquery must be distinct
+        - Core subquery1 ∩ Core subquery2 ∩ ... = ∅ (empty set)
+    5. Combined Core subqueries must cover all information needs of the original QUERY
+        - Core subquery1 ∪ Core subquery2 ∪ ... = QUERY
+
+    QUERY: {query}
+
+    Output JSON only:
+    {
+        "query_decomposition": {
+            "Core subquery1": "...",
+            "Core subquery2": "..."
+        }
+    }
+atomic_fact_extraction:
+  system: You are an expert answer analyzer. Extract atomic facts that are granular but not over-segmented.
+  user: |2
+
+    Decompose the answer into atomic facts.
+
+    ATOMIC FACT Definition:
+    - One verifiable claim that can stand alone
+    - Represents a single distinct piece of information
+    - Self-contained with full context (no referential terms like "that", "this", "the above")
+    - Must be understandable WITHOUT seeing the original query
+
+    Decomposition Rules:
+    - Do NOT extract generic statements like "The answer is yes/no" - incorporate the actual claim
+    - If the answer is very short (e.g., a single name or phrase), convert it into a complete statement using context from the query
+    - Keep related information together: if same subject/predicate applies to multiple objects, list them in one fact
+    - Avoid redundant or overlapping facts
+    - Do not overgeneralize beyond what is explicitly stated
+    - ALWAYS produce at least one atomic fact - never return empty
+
+    CRITICAL: Extract ONLY information explicitly stated in the ANSWER
+    - Do NOT add any background knowledge
+    - Do NOT infer or assume ANY information not present in the answer
+
+    Output JSON format:
+    {
+        "atomic_facts": {
+            "Atomic fact1": "fact1",
+            "Atomic fact2": "fact2"
+        }
+    }
+
+    QUERY: {query}
+    ANSWER: {answer}
+query_fact_relevance:
+  system: You are an expert evaluator specializing in Natural Language Inference (NLI) for question-answering systems.
+  user: |2
+
+    Does the given ATOMIC FACT provide NECESSARY information to answer the SUB QUERY?
+
+    SUB QUERY:
+    {subquery}
+
+    ATOMIC FACT:
+    {fact}
+
+    Rules:
+    - Answer 'Yes' ONLY if the fact is directly needed to answer the SUB QUERY
+    - Answer 'No' if the fact is not required to answer the SUB QUERY
+
+    Only output 'Yes' or 'No' without any explanation.
+query_fact_coverage:
+  system: You are an expert evaluator specializing in Natural Language Inference (NLI) for question-answering systems.
+  user: |2-
+
+    Task: Does the combination of ATOMIC FACTS covers the information needed to answer the SUBQUERY?
+
+    ATOMIC FACTS:
+    {facts}
+
+    SUBQUERY:
+    {subquery}
+
+    Rules:
+    - Answer 'Yes' ONLY if the ATOMIC FACTS contain information needed for a complete, specific answer
+    - Answer 'No' if ANY critical information is missing or the ATOMIC FACTS are insufficient to answer the SUBQUERY
+
+    Only output 'Yes' or 'No' without any explanation.
+chunk_fact_relevance:
+  system: You are an expert evaluator specializing in Natural Language Inference (NLI) for question-answering systems.
+  user: |2-
+
+    Task: Identify which ATOMIC FACTS can be Verified from the CHUNK.
+
+    CHUNK:
+    {chunk}
+
+    ATOMIC FACTS:
+    {atomic_facts}
+
+    Rules:
+    - Include a fact if it is supported by information in the CHUNK
+    - The chunk should provide evidence for the Atomic fact's validity
+    - Each Atomic fact is evaluated independently
+
+    Output ONLY the following JSON format with no additional text:
+    {
+      "verified_facts": ["Atomic fact1", "Atomic fact2"] or []
+    }
+chunk_fact_relevance_robust:
+  system: You are an expert evaluator specializing in Natural Language Inference (NLI) for question-answering systems.
+  user: |2
+
+    Task: Identify which ATOMIC FACTS can be Verified from the CHUNK.
+
+    CHUNK:
+    {chunk}
+
+    ATOMIC FACTS:
+    {atomic_facts}
+
+    Rules:
+    - Include a fact if it is supported by information in the CHUNK
+    - The chunk should provide evidence for the Atomic fact's validity
+    - Each Atomic fact is evaluated independently
+
+    Output ONLY the KEY names of verified facts as a JSON array:
+    {"verified_facts": ["Atomic fact1", "Atomic fact2"]}
+
+    Or if none are verified:
+    {"verified_facts": []}
+
+    IMPORTANT: Return ONLY the keys like "Atomic fact1", NOT the fact content.
+query_chunk_coverage:
+  system: You are an expert evaluator specializing in Natural Language Inference (NLI) for question-answering systems.
+  user: |2
+
+    Does the given CHUNK provide COMPLETE information to FULLY answer the SUBQUERY?
+
+    CHUNK:
+    {chunk}
+
+    SUBQUERY:
+    {subquery}
+
+    Rules:
+    - Answer 'Yes' ONLY if you can provide a complete, specific answer
+    - Answer 'No' if sentences are cut-off or critical details are missing
+
+    Only output 'Yes' or 'No' without any explanation.
+answer_generation:
+  system: You are an assistant for answering questions.
+  user: |2
+
+    Answer the QUERY below. Refer to the provided CONTEXT if needed.
+
+    QUERY: {query}
+
+    CONTEXT: {context}
+
+    Instructions:
+    - Answer only the query directly and naturally
+    - Do not evaluate or analyze the context
+    - Do not mention the context, documents, or sources in your response
+    - Response must be in JSON format only
+
+    JSON format:
+    {"Answer": "your direct answer here"}

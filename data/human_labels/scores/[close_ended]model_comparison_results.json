@@ -1,0 +1,402 @@
+{
+  "Qwen3_4B": {
+    "model_name": "Qwen3_4B",
+    "overall": {
+      "completeness": 0.6843749999999998,
+      "conciseness": 0.7365235805860806,
+      "verifiableness": 0.7065625000000001,
+      "ndcg_at_10": 0.5182696722628706,
+      "total_queries": 160,
+      "total_subquery": 241,
+      "total_atomic": 229
+    },
+    "by_dataset": {
+      "finqa_": {
+        "num_queries": 40,
+        "total_subquery": 87,
+        "total_atomic": 51,
+        "completeness": 0.3541666666666667,
+        "conciseness": 0.55625,
+        "verifiableness": 0.5645833333333333,
+        "ndcg_at_10": 0.43817134131437463
+      },
+      "hotpotqa_": {
+        "num_queries": 40,
+        "total_subquery": 63,
+        "total_atomic": 49,
+        "completeness": 0.675,
+        "conciseness": 0.7791666666666666,
+        "verifiableness": 0.6708333333333334,
+        "ndcg_at_10": 0.44165052346422184
+      },
+      "newsqa_": {
+        "num_queries": 40,
+        "total_subquery": 47,
+        "total_atomic": 78,
+        "completeness": 0.775,
+        "conciseness": 0.7244276556776557,
+        "verifiableness": 0.8458333333333332,
+        "ndcg_at_10": 0.6916852660604488
+      },
+      "nq_": {
+        "num_queries": 40,
+        "total_subquery": 44,
+        "total_atomic": 51,
+        "completeness": 0.9333333333333333,
+        "conciseness": 0.8862500000000001,
+        "verifiableness": 0.745,
+        "ndcg_at_10": 0.5015715582124368
+      }
+    }
+  },
+  "Gemma3_4B": {
+    "model_name": "Gemma3_4B",
+    "overall": {
+      "completeness": 0.5885416666666666,
+      "conciseness": 0.6421875,
+      "verifiableness": 0.6838541666666667,
+      "ndcg_at_10": 0.5182696722628706,
+      "total_queries": 160,
+      "total_subquery": 241,
+      "total_atomic": 196
+    },
+    "by_dataset": {
+      "finqa_": {
+        "num_queries": 40,
+        "total_subquery": 87,
+        "total_atomic": 49,
+        "completeness": 0.3791666666666667,
+        "conciseness": 0.53125,
+        "verifiableness": 0.54375,
+        "ndcg_at_10": 0.43817134131437463
+      },
+      "hotpotqa_": {
+        "num_queries": 40,
+        "total_subquery": 63,
+        "total_atomic": 46,
+        "completeness": 0.55,
+        "conciseness": 0.6375,
+        "verifiableness": 0.675,
+        "ndcg_at_10": 0.44165052346422184
+      },
+      "newsqa_": {
+        "num_queries": 40,
+        "total_subquery": 47,
+        "total_atomic": 57,
+        "completeness": 0.575,
+        "conciseness": 0.575,
+        "verifiableness": 0.7416666666666667,
+        "ndcg_at_10": 0.6916852660604488
+      },
+      "nq_": {
+        "num_queries": 40,
+        "total_subquery": 44,
+        "total_atomic": 44,
+        "completeness": 0.85,
+        "conciseness": 0.825,
+        "verifiableness": 0.775,
+        "ndcg_at_10": 0.5015715582124368
+      }
+    }
+  },
+  "GPT-oss_20B": {
+    "model_name": "GPT-oss_20B",
+    "overall": {
+      "completeness": 0.6749999999999996,
+      "conciseness": 0.7270359848484848,
+      "verifiableness": 0.7,
+      "ndcg_at_10": 0.5182696722628706,
+      "total_queries": 160,
+      "total_subquery": 241,
+      "total_atomic": 192
+    },
+    "by_dataset": {
+      "finqa_": {
+        "num_queries": 40,
+        "total_subquery": 87,
+        "total_atomic": 41,
+        "completeness": 0.3208333333333334,
+        "conciseness": 0.5,
+        "verifiableness": 0.55,
+        "ndcg_at_10": 0.43817134131437463
+      },
+      "hotpotqa_": {
+        "num_queries": 40,
+        "total_subquery": 63,
+        "total_atomic": 44,
+        "completeness": 0.6875,
+        "conciseness": 0.7625,
+        "verifiableness": 0.7125,
+        "ndcg_at_10": 0.44165052346422184
+      },
+      "newsqa_": {
+        "num_queries": 40,
+        "total_subquery": 47,
+        "total_atomic": 63,
+        "completeness": 0.8,
+        "conciseness": 0.7331439393939394,
+        "verifiableness": 0.8875,
+        "ndcg_at_10": 0.6916852660604488
+      },
+      "nq_": {
+        "num_queries": 40,
+        "total_subquery": 44,
+        "total_atomic": 44,
+        "completeness": 0.8916666666666666,
+        "conciseness": 0.9125,
+        "verifiableness": 0.65,
+        "ndcg_at_10": 0.5015715582124368
+      }
+    }
+  },
+  "Gemma3_27B": {
+    "model_name": "Gemma3_27B",
+    "overall": {
+      "completeness": 0.6718749999999997,
+      "conciseness": 0.6822916666666666,
+      "verifiableness": 0.7671875000000001,
+      "ndcg_at_10": 0.5182696722628706,
+      "total_queries": 160,
+      "total_subquery": 241,
+      "total_atomic": 213
+    },
+    "by_dataset": {
+      "finqa_": {
+        "num_queries": 40,
+        "total_subquery": 87,
+        "total_atomic": 52,
+        "completeness": 0.2833333333333334,
+        "conciseness": 0.4458333333333334,
+        "verifiableness": 0.6291666666666667,
+        "ndcg_at_10": 0.43817134131437463
+      },
+      "hotpotqa_": {
+        "num_queries": 40,
+        "total_subquery": 63,
+        "total_atomic": 54,
+        "completeness": 0.675,
+        "conciseness": 0.63125,
+        "verifiableness": 0.7416666666666666,
+        "ndcg_at_10": 0.44165052346422184
+      },
+      "newsqa_": {
+        "num_queries": 40,
+        "total_subquery": 47,
+        "total_atomic": 58,
+        "completeness": 0.8875,
+        "conciseness": 0.7895833333333333,
+        "verifiableness": 0.89375,
+        "ndcg_at_10": 0.6916852660604488
+      },
+      "nq_": {
+        "num_queries": 40,
+        "total_subquery": 44,
+        "total_atomic": 49,
+        "completeness": 0.8416666666666666,
+        "conciseness": 0.8625,
+        "verifiableness": 0.8041666666666668,
+        "ndcg_at_10": 0.5015715582124368
+      }
+    }
+  },
+  "Qwen3_30B": {
+    "model_name": "Qwen3_30B",
+    "overall": {
+      "completeness": 0.6937499999999996,
+      "conciseness": 0.7389136904761904,
+      "verifiableness": 0.7043154761904762,
+      "ndcg_at_10": 0.5182696722628706,
+      "total_queries": 160,
+      "total_subquery": 241,
+      "total_atomic": 218
+    },
+    "by_dataset": {
+      "finqa_": {
+        "num_queries": 40,
+        "total_subquery": 87,
+        "total_atomic": 49,
+        "completeness": 0.3125000000000001,
+        "conciseness": 0.4916666666666667,
+        "verifiableness": 0.5999999999999999,
+        "ndcg_at_10": 0.43817134131437463
+      },
+      "hotpotqa_": {
+        "num_queries": 40,
+        "total_subquery": 63,
+        "total_atomic": 47,
+        "completeness": 0.6625,
+        "conciseness": 0.725,
+        "verifiableness": 0.6125,
+        "ndcg_at_10": 0.44165052346422184
+      },
+      "newsqa_": {
+        "num_queries": 40,
+        "total_subquery": 47,
+        "total_atomic": 72,
+        "completeness": 0.8583333333333332,
+        "conciseness": 0.7973214285714285,
+        "verifiableness": 0.8839285714285715,
+        "ndcg_at_10": 0.6916852660604488
+      },
+      "nq_": {
+        "num_queries": 40,
+        "total_subquery": 44,
+        "total_atomic": 50,
+        "completeness": 0.9416666666666667,
+        "conciseness": 0.9416666666666667,
+        "verifiableness": 0.7208333333333333,
+        "ndcg_at_10": 0.5015715582124368
+      }
+    }
+  },
+  "Claude-Sonnet": {
+    "model_name": "Claude-Sonnet",
+    "overall": {
+      "completeness": 0.7458333333333333,
+      "conciseness": 0.6779423701298704,
+      "verifiableness": 0.8495833333333334,
+      "ndcg_at_10": 0.5182696722628706,
+      "total_queries": 160,
+      "total_subquery": 241,
+      "total_atomic": 374
+    },
+    "by_dataset": {
+      "finqa_": {
+        "num_queries": 40,
+        "total_subquery": 87,
+        "total_atomic": 83,
+        "completeness": 0.6166666666666666,
+        "conciseness": 0.6354166666666667,
+        "verifiableness": 0.7583333333333333,
+        "ndcg_at_10": 0.43817134131437463
+      },
+      "hotpotqa_": {
+        "num_queries": 40,
+        "total_subquery": 63,
+        "total_atomic": 64,
+        "completeness": 0.75,
+        "conciseness": 0.7633333333333334,
+        "verifiableness": 0.8041666666666666,
+        "ndcg_at_10": 0.44165052346422184
+      },
+      "newsqa_": {
+        "num_queries": 40,
+        "total_subquery": 47,
+        "total_atomic": 133,
+        "completeness": 0.8166666666666668,
+        "conciseness": 0.6351028138528139,
+        "verifiableness": 0.9483333333333335,
+        "ndcg_at_10": 0.6916852660604488
+      },
+      "nq_": {
+        "num_queries": 40,
+        "total_subquery": 44,
+        "total_atomic": 94,
+        "completeness": 0.8,
+        "conciseness": 0.6779166666666667,
+        "verifiableness": 0.8875,
+        "ndcg_at_10": 0.5015715582124368
+      }
+    }
+  },
+  "Gemini-2.5-pro": {
+    "model_name": "Gemini-2.5-pro",
+    "overall": {
+      "completeness": 0.6479166666666667,
+      "conciseness": 0.6163541666666668,
+      "verifiableness": 0.8546875000000002,
+      "ndcg_at_10": 0.5182696722628706,
+      "total_queries": 160,
+      "total_subquery": 241,
+      "total_atomic": 304
+    },
+    "by_dataset": {
+      "finqa_": {
+        "num_queries": 40,
+        "total_subquery": 87,
+        "total_atomic": 79,
+        "completeness": 0.5333333333333333,
+        "conciseness": 0.5625,
+        "verifiableness": 0.7458333333333333,
+        "ndcg_at_10": 0.43817134131437463
+      },
+      "hotpotqa_": {
+        "num_queries": 40,
+        "total_subquery": 63,
+        "total_atomic": 61,
+        "completeness": 0.55,
+        "conciseness": 0.5666666666666667,
+        "verifiableness": 0.8666666666666666,
+        "ndcg_at_10": 0.44165052346422184
+      },
+      "newsqa_": {
+        "num_queries": 40,
+        "total_subquery": 47,
+        "total_atomic": 104,
+        "completeness": 0.775,
+        "conciseness": 0.6445833333333334,
+        "verifiableness": 0.8979166666666666,
+        "ndcg_at_10": 0.6916852660604488
+      },
+      "nq_": {
+        "num_queries": 40,
+        "total_subquery": 44,
+        "total_atomic": 60,
+        "completeness": 0.7333333333333334,
+        "conciseness": 0.6916666666666667,
+        "verifiableness": 0.9083333333333332,
+        "ndcg_at_10": 0.5015715582124368
+      }
+    }
+  },
+  "GPT-5": {
+    "model_name": "GPT-5",
+    "overall": {
+      "completeness": 0.7166666666666665,
+      "conciseness": 0.7985416666666667,
+      "verifiableness": 0.7245833333333334,
+      "ndcg_at_10": 0.5182696722628706,
+      "total_queries": 160,
+      "total_subquery": 241,
+      "total_atomic": 192
+    },
+    "by_dataset": {
+      "finqa_": {
+        "num_queries": 40,
+        "total_subquery": 87,
+        "total_atomic": 54,
+        "completeness": 0.4125,
+        "conciseness": 0.5833333333333333,
+        "verifiableness": 0.7666666666666666,
+        "ndcg_at_10": 0.43817134131437463
+      },
+      "hotpotqa_": {
+        "num_queries": 40,
+        "total_subquery": 63,
+        "total_atomic": 45,
+        "completeness": 0.6875,
+        "conciseness": 0.8208333333333334,
+        "verifiableness": 0.625,
+        "ndcg_at_10": 0.44165052346422184
+      },
+      "newsqa_": {
+        "num_queries": 40,
+        "total_subquery": 47,
+        "total_atomic": 51,
+        "completeness": 0.8333333333333333,
+        "conciseness": 0.8525,
+        "verifiableness": 0.8441666666666666,
+        "ndcg_at_10": 0.6916852660604488
+      },
+      "nq_": {
+        "num_queries": 40,
+        "total_subquery": 44,
+        "total_atomic": 42,
+        "completeness": 0.9333333333333333,
+        "conciseness": 0.9375,
+        "verifiableness": 0.6625,
+        "ndcg_at_10": 0.5015715582124368
+      }
+    }
+  }
+}

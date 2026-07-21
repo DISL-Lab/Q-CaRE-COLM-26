@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+.venv/
+venv/
+
+# Run outputs
+results/
+results_*/
+log_*.txt
+
+# Retrieval corpora (see data/corpus/README.md)
+data/corpus/*/
+!data/corpus/README.md
+
+# OS / editor
+.DS_Store
+*.swp
