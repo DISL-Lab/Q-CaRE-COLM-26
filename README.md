@@ -1,16 +1,21 @@
 <div align="center">
 
-# Q-CARE: <u>Q</u>uery <u>C</u>overage and cl<u>A</u>im ve<u>R</u>ifiability for RAG <u>E</u>valuation
+<h1>Towards Query-Agnostic RAG Evaluation<br>via Query Coverage and Claim Verifiability</h1>
 
-**Towards Query-Agnostic RAG Evaluation via Query Coverage and Claim Verifiability**
+<h3><b>Q-CARE</b> &nbsp;·&nbsp; <ins>Q</ins>uery <ins>C</ins>overage and cl<ins>A</ins>im ve<ins>R</ins>ifiability for RAG <ins>E</ins>valuation</h3>
 
-Jeonghwan Choi · Taewon Yun · Minjeong Ban · Gyeonghun Sun · Jae-Gil Lee · Hwanjun Song
+Jeonghwan Choi &nbsp;·&nbsp; Taewon Yun &nbsp;·&nbsp; Minjeong Ban &nbsp;·&nbsp; Gyeonghun Sun &nbsp;·&nbsp; Jae-Gil Lee &nbsp;·&nbsp; Hwanjun Song
 
 Korea Advanced Institute of Science and Technology (KAIST)
 
-[![Conference](https://img.shields.io/badge/COLM-2026-4b44ce.svg)](https://colmweb.org/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
+[![Conference](https://img.shields.io/badge/COLM-2026-4b44ce.svg?style=flat-square)](https://colmweb.org/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg?style=flat-square)](LICENSE)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg?style=flat-square)](https://www.python.org/)
+[![Backbone](https://img.shields.io/badge/🤗-Qwen3--30B--A3B-yellow.svg?style=flat-square)](https://huggingface.co/Qwen/Qwen3-30B-A3B-Instruct-2507)
+
+<br>
+
+<img src="assets/overview.png" width="94%" alt="Q-CARE framework overview">
 
 </div>
 
@@ -22,10 +27,6 @@ answers into atomic claims, then scores retrieval and generation under one
 principle — **query coverage** and **claim verifiability**. The same metrics
 apply from close-ended fact-seeking to open-ended explanatory queries, and no
 gold answer is needed at evaluation time.
-
-<div align="center">
-<img src="assets/overview.png" width="100%" alt="Q-CARE framework overview">
-</div>
 
 ## 📥 What's released
 
