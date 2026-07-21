@@ -1,7 +1,8 @@
 """The LLM backbone that performs every Q-CARE judgement.
 
 The backbone is a local HuggingFace causal LM. Swap it by passing a different
-model id: any chat model with a tokenizer chat template works.
+model id: any instruction-tuned chat model with a tokenizer chat template works.
+A base (non instruction-tuned) model will not follow the judgement prompts.
 
 Determinism: the pipeline requests greedy decoding (``temperature=0.0``) for
 every step, so results are reproducible for a fixed model, library versions and

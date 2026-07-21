@@ -53,7 +53,8 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--sample_path", default=None,
                    help="Optional JSON list of query ids; default evaluates every query in the file")
     p.add_argument("--output_dir", default="results")
-    p.add_argument("--eval_model", default=DEFAULT_MODEL)
+    p.add_argument("--eval_model", default=DEFAULT_MODEL,
+                   help="Instruction-tuned backbone model id or path")
     p.add_argument("--prompts", default=DEFAULT_PROMPT_FILE)
     p.add_argument("--verbose", "-v", action="store_true")
     return p.parse_args()

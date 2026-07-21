@@ -54,7 +54,8 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--target_model", default="GPT-5",
                    help="Whose answers to score (key under model_prediction)")
     p.add_argument("--retrieval_method", default="BM25", help="Retriever whose chunks to use")
-    p.add_argument("--eval_model", default=DEFAULT_MODEL, help="Backbone model id or path")
+    p.add_argument("--eval_model", default=DEFAULT_MODEL,
+                   help="Instruction-tuned backbone model id or path")
     p.add_argument("--sample_path", default=None,
                    help="Optional JSON list of query ids; default evaluates every query in the file")
     p.add_argument("--output_dir", default="results", help="Where to write results")

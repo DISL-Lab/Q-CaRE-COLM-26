@@ -82,8 +82,9 @@ API keys, and no corpus download, since the retrieved chunks ship with the
 benchmark. The default backbone `Qwen/Qwen3-30B-A3B-Instruct-2507` is pulled
 from HuggingFace on first use and takes roughly 70 GB in bf16; point
 `CUDA_VISIBLE_DEVICES` at several GPUs and it shards automatically. On a smaller
-card, pass a smaller backbone — `--eval_model Qwen/Qwen3-8B` — at some cost in
-agreement with human judgement.
+card, pass a smaller instruction-tuned backbone — for example
+`--eval_model meta-llama/Llama-3.1-8B-Instruct` — at some cost in agreement with
+human judgement.
 
 ## Quick start
 
@@ -208,7 +209,7 @@ print(result["metrics"])
 | What | How |
 |---|---|
 | **Prompts** | Edit [`configs/prompts.yaml`](configs/prompts.yaml), or `--prompts my_prompts.yaml` |
-| **Backbone** | `--eval_model Qwen/Qwen3-8B` — any chat model with a tokenizer template |
+| **Backbone** | `--eval_model <model id>` — any **instruction-tuned** chat model with a tokenizer chat template. The paper evaluates Qwen3-30B, Qwen3-80B, Llama3.1-8B and Llama3.3-70B as backbones |
 | **Retriever** | `--retrieval_method ANCE` — BM25 and ANCE ship with the benchmark |
 | **Parsing** | `--parsing paper` reproduces the published behaviour; `strict` never double counts a claim |
 
@@ -221,7 +222,7 @@ print(result["metrics"])
 python scripts/generate_answers.py \
   --input_path  data/testbed/test-close_ended_queries.json \
   --output_path data/testbed/test-close_ended_queries+mymodel.json \
-  --model Qwen/Qwen3-8B --model_key MyModel
+  --model meta-llama/Llama-3.1-8B-Instruct --model_key MyModel
 
 python evaluate.py \
   --input_path data/testbed/test-close_ended_queries+mymodel.json \

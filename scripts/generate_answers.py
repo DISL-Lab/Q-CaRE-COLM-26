@@ -10,7 +10,7 @@ only needed to **add your own model** and then evaluate it with Q-CARE.
     CUDA_VISIBLE_DEVICES=0 python scripts/generate_answers.py \
         --input_path  data/testbed/test-close_ended_queries.json \
         --output_path data/testbed/test-close_ended_queries+mymodel.json \
-        --model       Qwen/Qwen3-8B \
+        --model       meta-llama/Llama-3.1-8B-Instruct \
         --model_key   MyModel
 
     # 2) score them
@@ -47,7 +47,8 @@ def parse_args():
     )
     p.add_argument("--input_path", required=True, help="Testbed split to answer")
     p.add_argument("--output_path", required=True, help="Where to write the augmented split")
-    p.add_argument("--model", required=True, help="HuggingFace model id or local path")
+    p.add_argument("--model", required=True,
+                   help="Instruction-tuned HuggingFace model id or local path")
     p.add_argument("--model_key", required=True,
                    help="Name to store the answers under in model_prediction")
     p.add_argument("--retrieval_method", default="BM25", help="Which retriever's chunks to use")
