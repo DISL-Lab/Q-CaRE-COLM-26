@@ -3,8 +3,8 @@
 
 This is how the answers shipped in ``data/testbed/`` were produced: each model
 sees the query plus the top-10 retrieved chunks and answers from them. The
-released benchmark already contains answers for seventeen models, so this script
-is only needed to **add your own model** and then evaluate it with Q-CARE.
+released benchmark already contains answers for eight models, so this script is
+only needed to **add your own model** and then evaluate it with Q-CARE.
 
     # 1) generate answers and write them into a copy of the testbed
     CUDA_VISIBLE_DEVICES=0 python scripts/generate_answers.py \

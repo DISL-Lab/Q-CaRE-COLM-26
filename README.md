@@ -27,14 +27,15 @@ gold answer is needed at evaluation time.
 <img src="assets/overview.png" width="100%" alt="Q-CARE framework overview">
 </div>
 
-## 📥 What's in this release
+## 📥 What's released
 
-- ✅ **Evaluation pipeline** — runs locally on one open-weight backbone, no API keys
-- ✅ **Benchmark** — 800 queries, 100 each from 8 datasets (4 close-ended, 4 open-ended)
-- ✅ **Retrieval results** — top-30 chunks per query from BM25 and ANCE, stored inline
-- ✅ **RAG answers** — 17 models, from GPT-5 and Claude-Sonnet down to 3B open models
-- ✅ **Human labels** — 320 queries × 8 models on all four alignment tasks, with written justifications
-- ✅ **Prompts** — every prompt in one editable YAML file
+| | Where | |
+|---|---|---|
+| **Evaluation pipeline** | `qcare/`, `evaluate.py` | one open-weight backbone, run locally — no API keys |
+| **Prompts** | `configs/prompts.yaml` | every prompt, in one editable file |
+| **Benchmark** | `data/testbed/` | 800 queries with retrieved chunks and RAG answers, inline |
+| **Human labels** | `data/human_labels/mturk/` | 320 queries × 8 systems, 4 alignment tasks, with written justifications |
+| **Human-derived scores** | `data/human_labels/scores/` | Q-CARE metrics recomputed from those labels |
 
 ## 🔍 How it works
 
@@ -245,46 +246,45 @@ python evaluate_retriever.py --retrievers MyRetriever,BM25 ...
 
 ## 📦 Benchmark data
 
-**800 queries**, balanced at 100 per dataset across eight sources — four
-close-ended, four open-ended — so no domain or query style dominates.
+### 800 queries, 8 datasets, 100 each
 
-| Query type | Dataset | Domain | Queries |
-|---|---|---|---:|
-| Close-ended | NQ | open-domain QA | 100 |
-| Close-ended | NewsQA | news | 100 |
-| Close-ended | HotpotQA | multi-hop | 100 |
-| Close-ended | FinQA | finance, numerical | 100 |
-| Open-ended | PubMedQA | biomedical | 100 |
-| Open-ended | LoTTE-Science | science forums | 100 |
-| Open-ended | LoTTE-Technology | technology forums | 100 |
-| Open-ended | ELI5 | long-form explanation | 100 |
-| | | **Total** | **800** |
+Half close-ended and half open-ended, so neither domain nor query style
+dominates — and so the same metrics can be shown to hold across both.
 
-Every record carries the query, a gold answer and gold chunks (kept for
-reference; Q-CARE never uses them), the ranked chunks from two retrievers, and
-the answers of seventeen RAG systems:
+| Close-ended · 4 × 100 | | Open-ended · 4 × 100 | |
+|---|---|---|---|
+| **NQ** | open-domain | **PubMedQA** | biomedical |
+| **NewsQA** | news | **LoTTE-Science** | science forums |
+| **HotpotQA** | multi-hop | **LoTTE-Technology** | technology forums |
+| **FinQA** | finance, numerical | **ELI5** | long-form explanation |
 
-| | Released |
+### What each record holds
+
+| Field | Contents |
 |---|---|
-| **Retrieved chunks** | top-30 per query from **BM25** and **ANCE** — stored inline, so **no corpus download is needed** |
-| **RAG answers** | **17 models** — GPT-5, GPT-4o, GPT-4o-mini, Claude-Sonnet, Gemini-2.5-pro, GPT-oss-20B, Llama-3.3-70B, Llama-3.1-8B, Llama-3.2-3B, Qwen3-30B, Qwen3-4B, Qwen2.5-32B, Qwen2.5-7B, Qwen2.5-3B, Gemma-3-27B, Gemma-3-12B, Gemma-3-4B (the paper benchmarks eight of them) |
-| **Human labels** | **320 queries** (40 per dataset) × **8 target models**, covering all alignment tasks below |
-| **Human-derived scores** | Q-CARE metrics recomputed from the human labels, per query and per model |
+| `query` | the question |
+| `retrieved_chunk` | top-30 ranked chunks from **BM25** and **ANCE**, stored inline — **no corpus download needed** |
+| `model_prediction` | answers from the eight RAG systems below, per retriever |
+| `gt_answer`, `gt_chunk` | gold answer and gold chunks, carried for reference — Q-CARE never reads them |
+
+| RAG systems | |
+|---|---|
+| Proprietary | GPT-5 · Claude-Sonnet · Gemini-2.5-pro |
+| Open-weight | GPT-oss-20B · Qwen3-30B · Qwen3-4B · Gemma3-27B · Gemma3-4B |
 
 ### Human annotations
 
-Collected on Amazon Mechanical Turk over decompositions produced by Qwen3-80B.
-Each of the four judgements carries a label **and** a free-text justification,
-with attention checks interleaved. No worker identifiers are included.
+Collected on Amazon Mechanical Turk over Qwen3-80B decompositions, covering
+**320 queries** (40 per dataset) for each of the eight systems. Every judgement
+carries a label **and** a written justification, with attention checks
+interleaved; no worker identifiers are included.
 
-| Alignment task | What annotators judged |
-|---|---|
-| `query_fact_relevance` | is this claim needed to answer this sub-query |
-| `query_fact_coverage` | do the claims together cover this sub-query |
-| `chunk_fact_relevance` | does this chunk support this claim |
-| `query_chunk_coverage` | does this chunk answer this sub-query |
+Annotators answered the same alignment questions the backbone does — so the
+labels drop straight into the pipeline in place of its judgements:
+`query_chunk_coverage`, `query_fact_coverage`, `query_fact_relevance`,
+`chunk_fact_relevance`.
 
-Format details are in
+Formats and column semantics:
 [`data/human_labels/README.md`](data/human_labels/README.md).
 
 ## 🗂️ Repository layout
