@@ -1,5 +1,5 @@
-# Q-CaRE core pipeline dependencies.
-# These are the exact versions used to produce the results in the paper.
+# Q-CARE dependencies.
+# The pinned versions are the ones used to produce the results in the paper.
 # Greedy decoding + these pinned versions make the pipeline deterministic
 # for a fixed backbone and GPU.
 
@@ -10,6 +10,9 @@ numpy==2.2.6
 tqdm==4.67.3
 safetensors==0.7.0
 
-# Optional: only needed if you evaluate with a hosted API backbone instead of
-# the local Qwen model (see scripts/). Not required for the default pipeline.
-# openai==2.29.0
+# Prompt loading. Not numerics-critical, so a floor rather than a pin.
+PyYAML>=5.4
+
+# Correlation statistics for analysis/human_agreement.py and
+# analysis/retriever_comparison.py. Not needed to run an evaluation.
+scipy>=1.10

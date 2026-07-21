@@ -1,15 +1,14 @@
 # Reproducing the paper
 
-Two levels of reproduction are available.
+Reproduction re-runs the backbone over the benchmark, regenerating every
+decomposition and alignment judgement, then scores them. Because the judgements
+are produced by an LLM, a fresh run lands close to — but not bit-identical with
+— the published numbers.
 
-**Scoring reproduction** — re-derive the metrics from the relevance judgements
-released with the benchmark. This is exact: the numbers match the paper to the
-last digit, and it needs no GPU.
-
-**Full reproduction** — re-run the backbone over the benchmark so it regenerates
-every decomposition and judgement, then score. Because the metrics are produced
-by an LLM, a fresh run is close to, but not bit-identical with, the published
-numbers.
+The intermediate judgements behind the published tables are not part of the
+release, so there is no judgement-free shortcut: a GPU is required. What does
+ship precomputed is `data/human_labels/scores/`, the Q-CARE metrics derived from
+the human labels.
 
 ---
 
@@ -110,8 +109,21 @@ shared, only the ranked chunk texts.
 
 ## Human agreement
 
-Correlates Q-CARE's judgements with the human annotations in
-`data/human_labels/`, for each backbone and each metric:
+Correlates each backbone's Q-CARE judgements with the human annotations, per
+metric — the experiment behind the backbone-agreement tables.
+
+> [!IMPORTANT]
+> This script needs two inputs that are **not** in the release, because the
+> intermediate judgements were not published. You have to build them first:
+>
+> * `--llm_root` — one sub-directory per backbone holding that backbone's
+>   relevance checks, as
+>   `{llm_root}/{backbone}/test-{split}_queries_{backbone}_{target}.json`.
+>   Produce each by running `evaluate.py` with `--eval_model <backbone>`; the
+>   `relevance_check` field of its output is what the script reads.
+> * `--human_dir` — the same records with the human labels attached under
+>   `relevance_check_human`, built from the CSVs in
+>   [`data/human_labels/mturk/`](../data/human_labels/mturk).
 
 ```bash
 python analysis/human_agreement.py \
@@ -127,6 +139,9 @@ python analysis/human_agreement.py \
 `--relevance binary` reproduces the binary ablation. `--sample_qids` restricts
 the comparison to the 320 human-annotated queries and is required for a faithful
 result.
+
+The human-derived Q-CARE scores themselves ship ready to use in
+[`data/human_labels/scores/`](../data/human_labels/scores).
 
 ---
 

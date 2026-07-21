@@ -26,13 +26,16 @@ Data
               {llm_root}/{backbone}/test-{split}_queries_{backbone}_{target}.json
 --backbones : comma-separated backbone names (sub-dirs of llm_root).
 
-See docs/REPRODUCE.md for how to produce these from the pipeline.
+Neither directory ships with the release: the intermediate judgements behind the
+published tables are not published. Build them by running evaluate.py once per
+backbone and attaching the human labels from data/human_labels/mturk/. See
+docs/REPRODUCE.md for the expected layout.
 
 Usage
 -----
     python analysis/human_agreement.py --relevance graded \
-        --human_dir data/relevance_checks/human \
-        --llm_root  data/relevance_checks/backbones \
+        --human_dir <human_labelled_dir> \
+        --llm_root  <backbone_judgement_root> \
         --backbones Qwen3-30B,Llama3.1-8B,Llama3.3-70B,Qwen3-80B
 """
 

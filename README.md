@@ -44,14 +44,15 @@ gold answer is needed at evaluation time.
 non-overlapping **sub-queries** and the answer into self-contained **atomic
 claims**. Retrieval supplies the top-k chunks.
 
-**Stage 2 · Coverage and verifiability.** An *alignment checker* asks three
-questions, each a single yes/no judgement:
+**Stage 2 · Coverage and verifiability.** An *alignment checker* makes four
+judgements, one chunk and one sub-query at a time:
 
-| Alignment | Question | Feeds |
+| Judgement | Question | Feeds |
 |---|---|---|
-| sub-query ↔ chunk | Does this chunk fully answer this sub-query? | C-Prec@k, C-nDCG@k |
-| sub-query ↔ claim | Do the answer's claims cover this sub-query? | Completeness, Conciseness |
-| claim ↔ chunk | Does any chunk support this claim? | Verifiableness |
+| `query_chunk_coverage` | Does this chunk answer this sub-query? | C-Prec@k, C-nDCG@k |
+| `query_fact_coverage` | Do the answer's claims cover this sub-query? | Completeness |
+| `query_fact_relevance` | Which claims serve this sub-query? | Conciseness |
+| `chunk_fact_relevance` | Does this chunk support this claim? | Verifiableness |
 
 **Stage 3 · Metrics.** Coverage is aggregated per query. A chunk that covers
 more sub-queries counts as *more* relevant — the graded relevance that makes the
@@ -267,10 +268,10 @@ dominates — and so the same metrics can be shown to hold across both.
 | `model_prediction` | answers from the eight RAG systems below, per retriever |
 | `gt_answer`, `gt_chunk` | gold answer and gold chunks, carried for reference — Q-CARE never reads them |
 
-| RAG systems | |
+| RAG systems | Pass to `--target_model` |
 |---|---|
-| Proprietary | GPT-5 · Claude-Sonnet · Gemini-2.5-pro |
-| Open-weight | GPT-oss-20B · Qwen3-30B · Qwen3-4B · Gemma3-27B · Gemma3-4B |
+| Proprietary | `GPT-5` · `Claude-Sonnet` · `Gemini-2.5-pro` |
+| Open-weight | `GPT-oss_20B` · `Qwen3_30B` · `Qwen3_4B` · `Gemma3_27B` · `Gemma3_4B` |
 
 ### Human annotations
 
