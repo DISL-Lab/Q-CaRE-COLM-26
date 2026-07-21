@@ -2,7 +2,7 @@
 
 <h1>Towards Query-Agnostic RAG Evaluation<br>via Query Coverage and Claim Verifiability</h1>
 
-<h3><b>Q-CARE</b> &nbsp;·&nbsp; <ins>Q</ins>uery <ins>C</ins>overage and cl<ins>A</ins>im ve<ins>R</ins>ifiability for RAG <ins>E</ins>valuation</h3>
+<h3><b>Q-CARE</b><br>: <ins>Q</ins>uery <ins>C</ins>overage and cl<ins>A</ins>im ve<ins>R</ins>ifiability for RAG <ins>E</ins>valuation</h3>
 
 Jeonghwan Choi &nbsp;·&nbsp; Taewon Yun &nbsp;·&nbsp; Minjeong Ban &nbsp;·&nbsp; Gyeonghun Sun &nbsp;·&nbsp; Jae-Gil Lee &nbsp;·&nbsp; Hwanjun Song
 
