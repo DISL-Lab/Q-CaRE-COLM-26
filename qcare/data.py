@@ -21,7 +21,8 @@ from typing import Dict, List, Optional
 CLOSE_ENDED_PREFIXES = ("nq_", "hotpotqa_", "newsqa_", "finqa_")
 OPEN_ENDED_PREFIXES = ("PubMedQA_", "science-", "technology-", "eli5_")
 
-#: Target models whose answers ship with the benchmark.
+#: Target models benchmarked in the paper. The testbed ships answers for more
+#: models than these; any key under ``model_prediction`` can be evaluated.
 TARGET_MODELS = (
     "Qwen3_4B",
     "Qwen3_30B",

@@ -29,6 +29,15 @@ gold answer is needed at evaluation time.
 <img src="assets/overview.png" width="100%" alt="Q-CARE framework overview">
 </div>
 
+## 📥 What's in this release
+
+- ✅ **Evaluation pipeline** — runs locally on one open-weight backbone, no API keys
+- ✅ **Benchmark** — 800 queries, 100 each from 8 datasets (4 close-ended, 4 open-ended)
+- ✅ **Retrieval results** — top-30 chunks per query from BM25 and ANCE, stored inline
+- ✅ **RAG answers** — 17 models, from GPT-5 and Claude-Sonnet down to 3B open models
+- ✅ **Human labels** — 320 queries × 8 models on all four alignment tasks, with written justifications
+- ✅ **Prompts** — every prompt in one editable YAML file
+
 ## 🔍 How it works
 
 **Stage 1 · Decomposition.** A *decomposer* splits the query into minimal,
@@ -238,14 +247,46 @@ python evaluate_retriever.py --retrievers MyRetriever,BM25 ...
 
 ## 📦 Benchmark data
 
-`data/testbed/` holds **800 queries** — 400 close-ended (NQ, NewsQA, HotpotQA,
-FinQA) and 400 open-ended (PubMedQA, LoTTE-Science, LoTTE-Technology, ELI5).
-Each record carries the query, the gold answer, the top-30 retrieved chunks for
-BM25 and ANCE, and the answers of eight target models. **Chunks are stored
-inline, so evaluation needs no corpus download.**
+**800 queries**, balanced at 100 per dataset across eight sources — four
+close-ended, four open-ended — so no domain or query style dominates.
 
-`data/human_labels/` contains the human annotations collected for the alignment
-tasks and the Q-CARE scores derived from them — see
+| Query type | Dataset | Domain | Queries |
+|---|---|---|---:|
+| Close-ended | NQ | open-domain QA | 100 |
+| Close-ended | NewsQA | news | 100 |
+| Close-ended | HotpotQA | multi-hop | 100 |
+| Close-ended | FinQA | finance, numerical | 100 |
+| Open-ended | PubMedQA | biomedical | 100 |
+| Open-ended | LoTTE-Science | science forums | 100 |
+| Open-ended | LoTTE-Technology | technology forums | 100 |
+| Open-ended | ELI5 | long-form explanation | 100 |
+| | | **Total** | **800** |
+
+Every record carries the query, a gold answer and gold chunks (kept for
+reference; Q-CARE never uses them), the ranked chunks from two retrievers, and
+the answers of seventeen RAG systems:
+
+| | Released |
+|---|---|
+| **Retrieved chunks** | top-30 per query from **BM25** and **ANCE** — stored inline, so **no corpus download is needed** |
+| **RAG answers** | **17 models** — GPT-5, GPT-4o, GPT-4o-mini, Claude-Sonnet, Gemini-2.5-pro, GPT-oss-20B, Llama-3.3-70B, Llama-3.1-8B, Llama-3.2-3B, Qwen3-30B, Qwen3-4B, Qwen2.5-32B, Qwen2.5-7B, Qwen2.5-3B, Gemma-3-27B, Gemma-3-12B, Gemma-3-4B (the paper benchmarks eight of them) |
+| **Human labels** | **320 queries** (40 per dataset) × **8 target models**, covering all alignment tasks below |
+| **Human-derived scores** | Q-CARE metrics recomputed from the human labels, per query and per model |
+
+### Human annotations
+
+Collected on Amazon Mechanical Turk over decompositions produced by Qwen3-80B.
+Each of the four judgements carries a label **and** a free-text justification,
+with attention checks interleaved. No worker identifiers are included.
+
+| Alignment task | What annotators judged |
+|---|---|
+| `query_fact_relevance` | is this claim needed to answer this sub-query |
+| `query_fact_coverage` | do the claims together cover this sub-query |
+| `chunk_fact_relevance` | does this chunk support this claim |
+| `query_chunk_coverage` | does this chunk answer this sub-query |
+
+Format details are in
 [`data/human_labels/README.md`](data/human_labels/README.md).
 
 ## 🗂️ Repository layout
