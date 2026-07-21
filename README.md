@@ -24,8 +24,38 @@ apply from close-ended fact-seeking to open-ended explanatory queries, and no
 gold answer is needed at evaluation time.
 
 <div align="center">
+
+[How it works](#how-it-works) · [Install](#install) · [Quick start](#quick-start) · [Customising](#customising) · [Benchmark data](#benchmark-data) · [Reproducibility](#reproducibility) · [Citation](#citation)
+
+</div>
+
+<div align="center">
 <img src="assets/overview.png" width="100%" alt="Q-CARE framework overview">
 </div>
+
+## How it works
+
+**Stage 1 · Decomposition.** A *decomposer* splits the query into minimal,
+non-overlapping **sub-queries** and the answer into self-contained **atomic
+claims**. Retrieval supplies the top-k chunks.
+
+**Stage 2 · Coverage and verifiability.** An *alignment checker* asks three
+questions, each a single yes/no judgement:
+
+| Alignment | Question | Feeds |
+|---|---|---|
+| sub-query ↔ chunk | Does this chunk fully answer this sub-query? | C-Prec@k, C-nDCG@k |
+| sub-query ↔ claim | Do the answer's claims cover this sub-query? | Completeness, Conciseness |
+| claim ↔ chunk | Does any chunk support this claim? | Verifiableness |
+
+**Stage 3 · Metrics.** Coverage is aggregated per query. A chunk that covers
+more sub-queries counts as *more* relevant — the graded relevance that makes the
+retrieval metrics coverage-aware — while claim-level coverage and support give
+the generator metrics.
+
+Because everything is grounded in the query's own sub-questions, the same
+procedure works whether the query has one factual answer or needs a long
+explanation, and a gold answer is never consulted.
 
 ## Metrics
 
@@ -39,15 +69,6 @@ gold answer is needed at evaluation time.
 <tr><td><b>Verifiableness</b></td><td>Is every claim supported by a retrieved chunk?</td></tr>
 </table>
 
-A chunk's relevance is *graded*: the fraction of sub-queries it covers, rather
-than a binary hit.
-
-<div align="center">
-
-[Install](#install) · [Quick start](#quick-start) · [Customising](#customising) · [Benchmark data](#benchmark-data) · [Reproducibility](#reproducibility) · [Citation](#citation)
-
-</div>
-
 ## Install
 
 ```bash
@@ -56,9 +77,13 @@ cd Q-CaRE-COLM-26
 pip install -r requirements.txt
 ```
 
-The default backbone `Qwen/Qwen3-30B-A3B-Instruct-2507` is pulled from
-HuggingFace on first use and needs about 70 GB of GPU memory in bf16 — or set
-`CUDA_VISIBLE_DEVICES` to several GPUs and it shards automatically.
+**What you need.** Everything runs locally against one open-weight backbone — no
+API keys, and no corpus download, since the retrieved chunks ship with the
+benchmark. The default backbone `Qwen/Qwen3-30B-A3B-Instruct-2507` is pulled
+from HuggingFace on first use and takes roughly 70 GB in bf16; point
+`CUDA_VISIBLE_DEVICES` at several GPUs and it shards automatically. On a smaller
+card, pass a smaller backbone — `--eval_model Qwen/Qwen3-8B` — at some cost in
+agreement with human judgement.
 
 ## Quick start
 
