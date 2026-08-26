@@ -16,7 +16,6 @@ Korea Advanced Institute of Science and Technology (KAIST)
 [![Backbone](https://img.shields.io/badge/🤗-Qwen3--30B--A3B-yellow.svg?style=flat-square)](https://huggingface.co/Qwen/Qwen3-30B-A3B-Instruct-2507)
 
 <br>
-
 <img src="assets/overview.png" width="94%" alt="Q-CARE framework overview">
 
 </div>
@@ -37,8 +36,6 @@ gold answer is needed at evaluation time.
 | **Evaluation pipeline** | `qcare/`, `evaluate.py` | one open-weight backbone, run locally — no API keys |
 | **Prompts** | `configs/prompts.yaml` | every prompt, in one editable file |
 | **Benchmark** | `data/testbed/` | 800 queries with retrieved chunks and RAG answers, inline |
-| **Human labels** | `data/human_labels/mturk/` | 320 queries × 8 systems, 4 alignment tasks, with written justifications |
-| **Human-derived scores** | `data/human_labels/scores/` | Q-CARE metrics recomputed from those labels |
 
 ## 🔍 How it works
 
@@ -104,8 +101,8 @@ benchmark. The default backbone `Qwen/Qwen3-30B-A3B-Instruct-2507` is pulled
 from HuggingFace on first use and takes roughly 70 GB in bf16; point
 `CUDA_VISIBLE_DEVICES` at several GPUs and it shards automatically. On a smaller
 card, pass a smaller instruction-tuned backbone — for example
-`--eval_model meta-llama/Llama-3.1-8B-Instruct` — at some cost in agreement with
-human judgement.
+`--eval_model meta-llama/Llama-3.1-8B-Instruct` — at some cost in evaluation
+quality.
 
 ## 🚀 Quick start
 
@@ -159,6 +156,7 @@ a score can always be traced back to the sub-queries and claims behind it:
     // a distinction binary relevance cannot make
     "precision_at_10": 0.150,   // C-Prec@10
     "ndcg_at_10":      0.707,   // C-nDCG@10
+
     // generator
     "completeness":    1.000,   // both sub-queries answered
     "conciseness":     1.000,   // no claim is surplus to the query
@@ -198,6 +196,7 @@ python evaluate_retriever.py \
 
 python analysis/retriever_comparison.py --results_dir results
 ```
+
 </details>
 
 <details>
@@ -209,6 +208,7 @@ decompositions and judgements while adapting prompts.
 ```bash
 python -i scripts/interactive.py
 ```
+
 ```python
 >>> r = ev("nq_test_812")
 >>> r["decomposed_query"]   # sub-queries
@@ -216,6 +216,7 @@ python -i scripts/interactive.py
 >>> r["relevance_check"]    # the alignment judgements
 >>> r["metrics"]
 ```
+
 </details>
 
 ## 🔧 Evaluate your own system
@@ -243,6 +244,7 @@ are needed, so no index or corpus has to leave your machine:
 ```python
 record["retrieved_chunk"]["MyRetriever"] = my_search(record["query"], k=10)
 ```
+
 ```bash
 python evaluate_retriever.py --retrievers MyRetriever,BM25 ...
 ```
@@ -299,21 +301,6 @@ dominates — and so the same metrics can be shown to hold across both.
 | Proprietary | `GPT-5` · `Claude-Sonnet` · `Gemini-2.5-pro` |
 | Open-weight | `GPT-oss_20B` · `Qwen3_30B` · `Qwen3_4B` · `Gemma3_27B` · `Gemma3_4B` |
 
-### Human annotations
-
-Collected on Amazon Mechanical Turk over Qwen3-80B decompositions, covering
-**320 queries** (40 per dataset) for each of the eight systems. Every judgement
-carries a label **and** a written justification, with attention checks
-interleaved; no worker identifiers are included.
-
-Annotators answered the same alignment questions the backbone does — so the
-labels drop straight into the pipeline in place of its judgements:
-`query_chunk_coverage`, `query_fact_coverage`, `query_fact_relevance`,
-`chunk_fact_relevance`.
-
-Formats and column semantics:
-[`data/human_labels/README.md`](data/human_labels/README.md).
-
 ## 🗂️ Repository layout
 
 ```
@@ -327,7 +314,7 @@ qcare/
   parsing.py                response parsers
   metrics.py                metric definitions
   data.py                   benchmark access helpers
-analysis/                   per-dataset table, retriever ranking, human agreement
+analysis/                   per-dataset table, retriever ranking
 scripts/                    benchmark runner, answer generation, interactive session
 docs/REPRODUCE.md           reproducing the paper's tables
 ```
