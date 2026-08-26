@@ -11,6 +11,7 @@ Jeonghwan Choi &nbsp;·&nbsp; Taewon Yun &nbsp;·&nbsp; Minjeong Ban &nbsp;·&nb
 Korea Advanced Institute of Science and Technology (KAIST)
 
 [![Conference](https://img.shields.io/badge/COLM-2026-4b44ce.svg?style=flat-square)](https://colmweb.org/)
+[![Dataset](https://img.shields.io/badge/🤗_Dataset-Q--CARE-ffd21e.svg?style=flat-square)](https://huggingface.co/datasets/DISLab/Q-CARE)
 [![License](https://img.shields.io/badge/License-MIT-green.svg?style=flat-square)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg?style=flat-square)](https://www.python.org/)
 [![Backbone](https://img.shields.io/badge/🤗-Qwen3--30B--A3B-yellow.svg?style=flat-square)](https://huggingface.co/Qwen/Qwen3-30B-A3B-Instruct-2507)
@@ -37,7 +38,7 @@ and no gold answer is needed at evaluation time.
 |---|---|---|
 | **Evaluation pipeline** | `qcare/`, `evaluate.py` | one open-weight backbone, run locally — no API keys |
 | **Prompts** | `configs/prompts.yaml` | every prompt, in one editable file |
-| **Benchmark** | `data/testbed/` | 800 queries with retrieved chunks and RAG answers, inline |
+| **Benchmark** | `data/testbed/` · [🤗 Hub](https://huggingface.co/datasets/DISLab/Q-CARE) | 800 queries with retrieved chunks and RAG answers, inline |
 
 ## 🔍 How it works
 
@@ -283,6 +284,23 @@ print(result["metrics"])
 | **Parsing** | `--parsing paper` reproduces the published behaviour; `strict` never double counts a claim |
 
 ## 📦 Benchmark data
+
+The benchmark ships in this repository under `data/testbed/` and is mirrored on
+the Hugging Face Hub as
+[**DISLab/Q-CARE**](https://huggingface.co/datasets/DISLab/Q-CARE), where the
+same 800 records can be browsed in the dataset viewer or loaded directly:
+
+```python
+from datasets import load_dataset
+
+close = load_dataset("DISLab/Q-CARE", "close_ended", split="test")
+open_ = load_dataset("DISLab/Q-CARE", "open_ended", split="test")
+```
+
+The Hub copy flattens the nested keys for the viewer, so `retrieved_chunk` and
+`model_prediction` become `retrieved_chunk_{bm25,ance}` and
+`model_prediction_{bm25,ance}`. The pipeline below reads the original JSON
+layout, which the Hub copy also carries verbatim under `raw/`.
 
 ### 800 queries, 8 datasets, 100 each
 
