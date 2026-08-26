@@ -39,6 +39,7 @@ from qcare.data import (
     load_qids,
     load_testbed,
 )
+from qcare.metrics import format_metrics_summary, summarise_metrics
 from qcare.parsing import PARSING_MODES
 from qcare.prompts import DEFAULT_PROMPT_FILE
 
@@ -94,6 +95,7 @@ def main() -> None:
     stem = os.path.basename(args.input_path).replace(".json", "")
     results_path = os.path.join(args.output_dir, f"{stem}_{args.target_model}_qcare_results.json")
     latency_path = os.path.join(args.output_dir, f"{stem}_{args.target_model}_latency_summary.json")
+    metrics_path = os.path.join(args.output_dir, f"{stem}_{args.target_model}_metrics_summary.json")
 
     data = load_testbed(args.input_path)
     wanted = load_qids(args.sample_path) if args.sample_path else None
@@ -110,7 +112,22 @@ def main() -> None:
           f"| retrieval={args.retrieval_method} | parsing={args.parsing}")
     print(f"{len(data)} records, {len(done)} already done, {len(todo)} to evaluate")
     if not todo:
+        # Everything is already scored; re-summarise without loading the backbone.
         print("Nothing to do.")
+        if results:
+            metrics = summarise_metrics(
+                results,
+                target_model=args.target_model,
+                eval_model=args.eval_model,
+                retrieval_method=args.retrieval_method,
+                parsing=args.parsing,
+                timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            )
+            with open(metrics_path, "w", encoding="utf-8") as f:
+                json.dump(metrics, f, indent=2, ensure_ascii=False)
+            print()
+            print(format_metrics_summary(metrics))
+            print(f"\nmetrics summary  -> {metrics_path}")
         return
 
     import time
@@ -158,7 +175,21 @@ def main() -> None:
             f, indent=2, ensure_ascii=False,
         )
 
+    metrics = summarise_metrics(
+        results,
+        target_model=args.target_model,
+        eval_model=args.eval_model,
+        retrieval_method=args.retrieval_method,
+        parsing=args.parsing,
+        timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    )
+    with open(metrics_path, "w", encoding="utf-8") as f:
+        json.dump(metrics, f, indent=2, ensure_ascii=False)
+
+    print()
+    print(format_metrics_summary(metrics))
     print(f"\n{len(results)} results -> {results_path}")
+    print(f"metrics summary  -> {metrics_path}")
     print(f"latency summary  -> {latency_path}")
 
 
