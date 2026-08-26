@@ -25,9 +25,11 @@ Korea Advanced Institute of Science and Technology (KAIST)
 Q-CARE is a **query-agnostic**, fully **reference-free** framework for evaluating
 retrieval-augmented generation. It decomposes queries into sub-queries and
 answers into atomic claims, then scores retrieval and generation under one
-principle — **query coverage** and **claim verifiability**. The same metrics
-apply from close-ended fact-seeking to open-ended explanatory queries, and no
-gold answer is needed at evaluation time.
+principle — **query coverage** and **claim verifiability**. Because the scores
+come from the query's own decomposition rather than a pre-annotated relevance
+set, the same metrics apply from close-ended fact-seeking to open-ended
+explanatory queries, and on to agentic requests that arrive in no fixed format —
+and no gold answer is needed at evaluation time.
 
 ## 📥 What's released
 
@@ -90,6 +92,9 @@ answers a single sub-query — a distinction binary relevance cannot express.
 ## ⚙️ Install
 
 ```bash
+conda create -n qcare python=3.10
+conda activate qcare
+
 git clone https://github.com/DISL-Lab/Q-CaRE-COLM-26.git
 cd Q-CaRE-COLM-26
 pip install -r requirements.txt
@@ -99,10 +104,14 @@ pip install -r requirements.txt
 API keys, and no corpus download, since the retrieved chunks ship with the
 benchmark. The default backbone `Qwen/Qwen3-30B-A3B-Instruct-2507` is pulled
 from HuggingFace on first use and takes roughly 70 GB in bf16; point
-`CUDA_VISIBLE_DEVICES` at several GPUs and it shards automatically. On a smaller
-card, pass a smaller instruction-tuned backbone — for example
-`--eval_model meta-llama/Llama-3.1-8B-Instruct` — at some cost in evaluation
-quality.
+`CUDA_VISIBLE_DEVICES` at several GPUs and it shards automatically.
+
+`--eval_model` is the **backbone that makes the judgements** — the decomposer and
+alignment checker — and is loaded locally with `transformers`, so it must be an
+open-weight chat model on HuggingFace; API-only models cannot be passed here.
+It is unrelated to `--target_model`, which names the **RAG system being scored**
+(`GPT-5`, `Claude-Sonnet`, … — their answers ship with the benchmark, already
+generated).
 
 ## 🚀 Quick start
 
