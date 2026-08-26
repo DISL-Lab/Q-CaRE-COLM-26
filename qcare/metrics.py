@@ -138,3 +138,70 @@ def compute_metrics(
         "ndcg_at_10": ndcg,
         "precision_at_10": precision_at_k(query_chunk_coverage, num_subqueries),
     }
+
+
+#: Metrics averaged in a run summary, with their display labels.
+SUMMARY_METRICS = (
+    ("completeness", "Comp."),
+    ("conciseness", "Conc."),
+    ("verifiableness", "Veri."),
+    ("precision_at_10", "C-Prec@10"),
+    ("ndcg_at_10", "C-nDCG@10"),
+)
+
+#: Decomposition counts reported alongside the metrics.
+SUMMARY_COUNTS = (
+    "num_subqueries",
+    "num_atomic_facts",
+    "covered_subqueries",
+    "relevant_atomic_facts",
+    "verified_atomic_facts",
+)
+
+
+def _mean(values: List[float]) -> float:
+    return sum(values) / len(values) if values else float("nan")
+
+
+def summarise_metrics(results: List[Dict], **context) -> Dict:
+    """Average a run's per-query metrics, overall and per source dataset.
+
+    ``results`` is the list ``evaluate.py`` writes: one record per query, each
+    carrying a ``metrics`` block and a ``dataset_name``. Keyword arguments are
+    copied into the summary as run context (target model, backbone, and so on).
+    """
+
+    def block(items: List[Dict]) -> Dict:
+        out = {"queries": len(items)}
+        for key, _ in SUMMARY_METRICS:
+            out[key] = _mean([i["metrics"][key] for i in items if key in i["metrics"]])
+        for key in SUMMARY_COUNTS:
+            out[f"avg_{key}"] = _mean([i["metrics"][key] for i in items if key in i["metrics"]])
+        return out
+
+    by_dataset: Dict[str, List[Dict]] = {}
+    for item in results:
+        by_dataset.setdefault(item.get("dataset_name", "unknown"), []).append(item)
+
+    summary = dict(context)
+    summary["total_queries"] = len(results)
+    summary["overall"] = block(results)
+    summary["per_dataset"] = {ds: block(items) for ds, items in by_dataset.items()}
+    return summary
+
+
+def format_metrics_summary(summary: Dict) -> str:
+    """Render a run summary as a fixed-width table."""
+    keys = [key for key, _ in SUMMARY_METRICS]
+    labels = [label for _, label in SUMMARY_METRICS]
+    width = max(len(label) for label in labels) + 3
+
+    def row(name: str, block: Dict) -> str:
+        cells = "".join(f"{block[k]:>{width}.3f}" for k in keys)
+        return f"{name:<12}{cells}{block['queries']:>7d}"
+
+    header = f"{'Dataset':<12}" + "".join(f"{l:>{width}}" for l in labels) + f"{'n':>7}"
+    lines = [header, "-" * len(header)]
+    lines += [row(ds, block) for ds, block in summary["per_dataset"].items()]
+    lines += ["-" * len(header), row("ALL", summary["overall"])]
+    return "\n".join(lines)
