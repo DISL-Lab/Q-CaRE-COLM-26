@@ -4,7 +4,7 @@
 
 <h3><b>Q-CARE</b><br>: <ins>Q</ins>uery <ins>C</ins>overage and cl<ins>A</ins>im ve<ins>R</ins>ifiability for RAG <ins>E</ins>valuation</h3>
 
-<b>Score a RAG system's retriever <i>and</i> generator in one pass — no gold answers, no API keys.</b>
+<b>Score a RAG system's retriever <i>and</i> generator in one pass.</b>
 
 Jeonghwan Choi &nbsp;·&nbsp; Taewon Yun &nbsp;·&nbsp; Minjeong Ban &nbsp;·&nbsp; Gyeonghun Sun &nbsp;·&nbsp; Jae-Gil Lee &nbsp;·&nbsp; Hwanjun Song
 
